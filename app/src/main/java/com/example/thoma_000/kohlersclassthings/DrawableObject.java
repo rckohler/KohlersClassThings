@@ -32,7 +32,15 @@ public class DrawableObject {
         return ret;
     }
 
+    public void scaleToBounds(RectF bounds){
 
+
+this.bounds = bounds;
+
+
+
+
+    }
 
 
 
@@ -68,6 +76,8 @@ private void setBounds(){
 public void teleportTO(float destinationX,float destinationY){
     xPos = destinationX;
     yPos = destinationY;
+    //System.out.println("is selected");
+    //System.out.println("is not selected");
     }
 
 

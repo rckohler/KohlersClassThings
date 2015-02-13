@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 public class ObjectBox extends DrawableObject{
 
     Equipment.EquipmentSlot equipmentSlot;
+    boolean isOccupied;
     public ObjectBox (Bitmap bitmap, float xPos, float yPos, int width, int height, Equipment.EquipmentSlot equipmentSlot) {
         super(bitmap, xPos, yPos, width, height);
         this.equipmentSlot = equipmentSlot;
@@ -19,7 +20,7 @@ public class ObjectBox extends DrawableObject{
     @Override
     public void processClick(){
 
-        System.out.println("i am da internet");
+      //  System.out.println("i am da internet");
 
     }
 

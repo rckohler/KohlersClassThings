@@ -24,7 +24,7 @@ public class DrawableObjectView extends View {
     Vector<Equipment> equipment;
     Vector<ObjectBox> equipmentBoxes = new Vector<>();
     Dude player;
-    Bitmap dudeBitmap;
+    Bitmap dudeBitmap, leatherbootBitmap,leatherlegsBitmap,ironlegsBitmap,ironhelmetBitmap,ironchestBitmap,chainchestBitmap,chainhelmetBitmap,chainlegsBitmap,swordlongBitmap;
     Bitmap backgroundimageBitmap;
     Bitmap axeBitmap;
     Bitmap poisonBitmap;
@@ -33,6 +33,7 @@ public class DrawableObjectView extends View {
     Bitmap internetBitmap;
     Bitmap boxBitmap;
     Bitmap leatherhatBitmap;
+
     Equipment selectedObject;
     ClassProject main;
     RectF backgroundBounds;
@@ -42,21 +43,19 @@ public class DrawableObjectView extends View {
     public DrawableObjectView(Context context) {
         super(context);
         main = (ClassProject) context;
-        equipment = new Vector<>();
-        loadPictures();
-        createBackgroundImage();
-
-        createDude();
         screenHeight =main.screenHeight;
         screenWidth= main.screenWidth;
-       backgroundBounds = new RectF(0,0,screenWidth,.9f*screenHeight);
-       // createAxe();
-        //createPoison();
-       // createRadiation();
-       // createFish();
-       // createInternet();
-       createObjectBox();
-        createEquipment();
+        equipment = new Vector<>();
+        loadPictures();
+        createBackpack();
+        createBackgroundImage();
+
+        backgroundBounds = new RectF(0,0,screenWidth,.9f*screenHeight);
+        createObjectBox();
+
+        createAllEquipment();
+        createWeapons();
+        //createEquipment(Equipment.EquipmentSlot.HEAD,Armor.ArmorType.HEAD, Armor.MaterialType.IRON);
 
 
 
@@ -72,21 +71,29 @@ public class DrawableObjectView extends View {
                     if (equipment.elementAt(i).isSelected)
                         selectedObject = equipment.elementAt(i);
                     else
-                         selectedObject = null;
+                        selectedObject = null;
                 }
             }
         }
-        if (selectedObject!=null)
-        for (int i = 0; i < equipmentBoxes.size(); i++){
-           ObjectBox currentBox = equipmentBoxes.elementAt(i);
-            if (selectedObject.equipmentSlot==currentBox.equipmentSlot)
-                selectedObject.teleportTO(currentBox.xPos,currentBox.yPos);
-
-        }
-            if (!objectClicked)
-            player.teleportTO(clickX, clickY);
+        if (selectedObject != null && !selectedObject.isEquipped)
+            for (int i = 0; i < equipmentBoxes.size(); i++) {
+                ObjectBox currentBox = equipmentBoxes.elementAt(i);
+                if (selectedObject.equipmentSlot == currentBox.equipmentSlot && !currentBox.isOccupied) {
 
 
+                    selectedObject.teleportTO(currentBox.xPos, currentBox.yPos);
+                    currentBox.isOccupied = true;
+                    selectedObject.isEquipped = true;
+                }
+                if (selectedObject.isEquipped) {
+                    System.out.println("if i were smart i would be in a backpack");
+                }
+                if (!objectClicked)
+                    ;
+                //player.teleportTO(clickX, clickY);
+
+
+            }
     }
     public boolean onTouchEvent(MotionEvent event) {
         int eventaction = event.getAction();
@@ -103,17 +110,40 @@ public class DrawableObjectView extends View {
         return true;
     }
         public void loadPictures(){
-        dudeBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.dude);
-        axeBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.axe);
-        poisonBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.poison);
-        radiationBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.radiation);
-        fishBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.fish);
-        internetBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.internet);
-        boxBitmap =BitmapFactory.decodeResource(getResources(),R.drawable.box);
-        leatherhatBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.leatherhat);
-        backgroundimageBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.backgroundimage);
+            dudeBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.dude);
+            axeBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.axe);
+            boxBitmap =BitmapFactory.decodeResource(getResources(),R.drawable.box);
+            backgroundimageBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.backgroundimage);
+            leatherlegsBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.leatherlegs);
+            leatherhatBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.leatherhat);
+            leatherbootBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.leatherboot);
+
+            ironhelmetBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.ironhelmet);
+            ironlegsBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.ironlegs);
+            ironchestBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.ironchest);
+
+            chainchestBitmap= BitmapFactory.decodeResource(getResources(),R.drawable.chainchest);
+            chainhelmetBitmap= BitmapFactory.decodeResource(getResources(),R.drawable.chainhelmet);
+            chainlegsBitmap= BitmapFactory.decodeResource(getResources(),R.drawable.chainlegs);
+
+            swordlongBitmap =BitmapFactory.decodeResource(getResources(),R.drawable.swordlong);
+    }
+    private void createBackpack(){
+        //for loop
+        ObjectBox slotInBackpack;
+        for (int i = 0;i<6;i++) {
+            slotInBackpack = new ObjectBox(boxBitmap, .08f * screenWidth, .09f * screenHeight * (1 * +i)+ screenHeight * .2f, (int) (screenWidth * .12), (int) (screenWidth * .12), Equipment.EquipmentSlot.BACKPACK);
+            equipmentBoxes.add(slotInBackpack);
+            slotInBackpack = new ObjectBox(boxBitmap, 0.92f * screenWidth, .09f * screenHeight * (1 * +i)+ screenHeight * .2f, (int) (screenWidth * .12), (int) (screenWidth * .12), Equipment.EquipmentSlot.BACKPACK);
+            equipmentBoxes.add(slotInBackpack);
+        }
+
+
 
     }
+
+
+
 
     private void createDude() {
         Dude dude = new Dude(dudeBitmap, 50, 50, 100, 100);
@@ -121,7 +151,13 @@ public class DrawableObjectView extends View {
        player = dude;
     }
 
+    private void createWeapons(){
+        Weapon swordlong = new Weapon (leatherlegsBitmap,75,75,100,100, Weapon.WeaponType.SWORD, Equipment.EquipmentSlot.RARMS);
+        swordlong.bitmap = swordlongBitmap;
+        equipment.add(swordlong);
 
+
+    }
 
     private void createBackgroundImage(){
 
@@ -132,23 +168,31 @@ public class DrawableObjectView extends View {
 
 
 
+    private void createAllEquipment(){
+       createEquipment(Equipment.EquipmentSlot.BODY, Armor.ArmorType.BODY, Armor.MaterialType.IRON);
+       createEquipment(Equipment.EquipmentSlot.HEAD, Armor.ArmorType.HEAD, Armor.MaterialType.IRON);
+       createEquipment(Equipment.EquipmentSlot.LEGS, Armor.ArmorType.LEGS, Armor.MaterialType.IRON);
+
+
+    }
 
 
 
 
 
 
-    private void createEquipment(){
-        Armor armor = new Armor(fishBitmap,400,300,100,100);
+
+    private void createEquipment(Equipment.EquipmentSlot equipmentSlot,Armor.ArmorType armorType,Armor.MaterialType materialType){
+        Armor armor = new Armor(axeBitmap,400,300,100,100, armorType,materialType,equipmentSlot);
         sendBitmapToEquipment(armor);
-        armor.equipmentSlot = Equipment.EquipmentSlot.HEAD;
+
 
         equipment.add(armor);
 
     }
 
     private void createObjectBox(){
-        ObjectBox head,rlegs,llegs,rarms,larms,body;
+        ObjectBox head,legs,rarms,larms,body;
        //  if (selectedObject) == null;
        //  if (selectedObject) == head,legs,arms,body;
        //  teleportTo selectedObject = selectedObject;
@@ -159,15 +203,16 @@ public class DrawableObjectView extends View {
         larms = new ObjectBox(boxBitmap,screenWidth*.3f,screenHeight*.375f,(int)(screenWidth*.1),(int)(screenHeight*.20), Equipment.EquipmentSlot.LARMS);
         body = new ObjectBox(boxBitmap,screenWidth*.5f,screenHeight*.4f,(int)(screenWidth*.2),(int)(screenHeight*.25), Equipment.EquipmentSlot.BODY);
         head = new ObjectBox(boxBitmap,screenWidth*.5f,screenHeight*.20f,(int)(screenWidth*.25),(int)(screenHeight*.13), Equipment.EquipmentSlot.HEAD);
-        llegs = new ObjectBox(boxBitmap,screenWidth*.45f,screenHeight*.60f,(int)(screenWidth*.1),(int)(screenHeight*.16),Equipment.EquipmentSlot.LLEGS);
-        rlegs = new ObjectBox(boxBitmap,screenWidth*.55f,screenHeight*.60f,(int)(screenWidth*.1),(int)(screenHeight*.16),Equipment.EquipmentSlot.RARMS);
+        legs = new ObjectBox(boxBitmap,screenWidth*.5f,screenHeight*.60f,(int)(screenWidth*.2),(int)(screenHeight*.16),Equipment.EquipmentSlot.LEGS);
+
+
 
         equipmentBoxes.add(rarms);
         equipmentBoxes.add(larms);
         equipmentBoxes.add(body);
         equipmentBoxes.add(head);
-        equipmentBoxes.add(llegs);
-        equipmentBoxes.add(rlegs);
+        equipmentBoxes.add(legs);
+
 
     }
     private void sendBitmapToEquipment(Equipment equipment){
@@ -177,21 +222,35 @@ public class DrawableObjectView extends View {
                 equipment.bitmap = leatherhatBitmap;
                 break;
             case CHAINHAT:
+                equipment.bitmap = chainhelmetBitmap;
                 break;
             case IRONHAT:
+                equipment.bitmap = ironhelmetBitmap;
                 break;
+            case IRONCHEST:
+                equipment.bitmap = ironchestBitmap;
+                break;
+            case CHAINCHEST:
+                equipment.bitmap = chainchestBitmap;
+                break;
+            case LEATHERBOOTS:
+                equipment.bitmap = leatherbootBitmap;
+                break;
+            case IRONLEGS:
+                equipment.bitmap = ironlegsBitmap;
+                break;
+            case CHAINLEGS:
+                equipment.bitmap = chainlegsBitmap;
+                break;
+            case LEATHERLEGS:
+                equipment.bitmap = leatherlegsBitmap;
+                break;
+
         }
     }
 
 
-    private void moveaxeDude(){
-        Dude player;
 
-
-
-
-
-    }
 
 
 
