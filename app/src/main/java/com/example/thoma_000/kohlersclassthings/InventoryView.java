@@ -96,7 +96,7 @@ public class InventoryView extends View {
     }
     private void createStartingArmor() {
         createArmor(Equipment.EquipmentSlot.HEAD, Armor.ArmorType.HEAD, Armor.MaterialType.IRON);
-
+        createArmor(Equipment.EquipmentSlot.HEAD, Armor.ArmorType.HEAD, Armor.MaterialType.LEATHER);
 
     }
     private void createArmor(Equipment.EquipmentSlot equipmentSlot,Armor.ArmorType armorType,Armor.MaterialType materialType){

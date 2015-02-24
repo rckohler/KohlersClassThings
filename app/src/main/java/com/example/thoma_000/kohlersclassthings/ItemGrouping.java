@@ -1,6 +1,5 @@
 package com.example.thoma_000.kohlersclassthings;
 
-import android.content.ClipData;
 import android.graphics.Canvas;
 
 import java.util.Vector;
@@ -22,8 +21,7 @@ public class ItemGrouping {
     //backpack.takeItemFromBox(givingBox);
     public void startingPlacementOfItem(Equipment item){
         ObjectBox matchingBox = returnMatchingBox(item);
-        matchingBox.heldEquipment= item;
-
+        matchingBox.equipItem(item);
     }
     public void takeItemFromBox(ObjectBox givingBox){
         //check for matching slot
@@ -33,10 +31,12 @@ public class ItemGrouping {
             if (matchingBox.heldEquipment != null) {
                 swappedEquipment = matchingBox.heldEquipment;
             }
-            matchingBox.heldEquipment = givingBox.heldEquipment;
+            matchingBox.equipItem(givingBox.heldEquipment);
         }
         if(swappedEquipment!=null)
             givingBox.equipItem(swappedEquipment);
+        else
+            givingBox.isOccupied = false;
         //
     }
     public void processClick(float clickX, float clickY){
@@ -71,8 +71,11 @@ public class ItemGrouping {
     public void drawSelf(Canvas canvas){
         for(int i = 0; i < boxes.size(); i++){
             boxes.elementAt(i).drawSelf(canvas);
-            if(boxes.elementAt(i).heldEquipment!=null)
+            if(boxes.elementAt(i).heldEquipment!=null) {
+
                 boxes.elementAt(i).heldEquipment.drawSelf(canvas);
+            }
         }
     }
+
 }
