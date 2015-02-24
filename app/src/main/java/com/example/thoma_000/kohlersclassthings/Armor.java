@@ -12,7 +12,7 @@ public class Armor extends Equipment {
     float blockChance;
 
 
-    boolean isEquiped;
+
 
     public enum MaterialType{LEATHER,CHAIN,IRON}
     public enum ArmorType{LEGS,HEAD,BODY,ARMS }

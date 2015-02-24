@@ -29,6 +29,7 @@ public class Equipment extends DrawableObject {
     public Equipment(Bitmap bitmap, float xPos, float yPos, int width, int height, Equipment.EquipmentSlot equipmentSlot) {
 
         super(bitmap, xPos, yPos, width, height);
+        isEquipped = false;
         this.equipmentSlot = equipmentSlot;
 
     }
@@ -38,6 +39,11 @@ public class Equipment extends DrawableObject {
 
        // System.out.println("i am da internet");
 
+    }
+    public void equip(ObjectBox targetBox){
+        teleportTo(targetBox);
+        targetBox.isOccupied = true;
+        targetBox.heldEquipment = this;
     }
 }
 

@@ -8,9 +8,8 @@ import android.graphics.RectF;
  * Created by thoma_000 on 1/26/2015.
  */
 public class DrawableObject {
-    float xPos;
-
-    float yPos;
+    public float xPos;
+    public float yPos;
     float width;
     float height;
     Bitmap bitmap;
@@ -73,14 +72,19 @@ private void setBounds(){
 
 }
 
-public void teleportTO(float destinationX,float destinationY){
+public void teleportTo(float destinationX,float destinationY){
     xPos = destinationX;
     yPos = destinationY;
     //System.out.println("is selected");
     //System.out.println("is not selected");
     }
 
+public void teleportTo(ObjectBox box){
+    teleportTo(box.xPos,box.yPos);
 
+
+
+}
 public void update(Canvas canvas){
    drawSelf(canvas);
 

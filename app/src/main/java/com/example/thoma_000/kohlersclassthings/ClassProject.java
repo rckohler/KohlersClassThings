@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 
 public class ClassProject extends ActionBarActivity {
-    DrawableObjectView drawableObjectView;
+    InventoryView drawableObjectView;
     float screenHeight;
     float screenWidth;
     @Override
@@ -21,7 +21,7 @@ public class ClassProject extends ActionBarActivity {
 
         screenHeight = metrics.heightPixels;
         screenWidth = metrics.widthPixels;
-        drawableObjectView = new DrawableObjectView(this);
+        drawableObjectView = new InventoryView(this);
 
         setContentView(drawableObjectView);
     }

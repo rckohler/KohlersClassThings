@@ -4,14 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.RectF;
-import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -60,9 +56,9 @@ public class DrawableObjectView extends View {
 
 
     }
-    private void handleClick(float clickX,float clickY) {
+    private void handleClick2(float clickX,float clickY) {
         boolean objectClicked = false;
-        for (int i = 0; i < equipment.size(); i++) {//USE THIS A TON
+        for (int i = 0; i < equipment.size(); i++) {//assigns selected object
 
             {
                 if (equipment.elementAt(i).isClicked(clickX, clickY)) {
@@ -75,26 +71,150 @@ public class DrawableObjectView extends View {
                 }
             }
         }
-        if (selectedObject != null && !selectedObject.isEquipped)
+        if (selectedObject != null && !selectedObject.isEquipped)// WE SHOULD N OT BE USING ALL THIS CRAZY WEIRD STUFF AND USE WHAT IS IN DRAWABLE OBJECT
             for (int i = 0; i < equipmentBoxes.size(); i++) {
                 ObjectBox currentBox = equipmentBoxes.elementAt(i);
                 if (selectedObject.equipmentSlot == currentBox.equipmentSlot && !currentBox.isOccupied) {
+                    selectedObject.teleportTo(currentBox.xPos, currentBox.yPos);
+                    currentBox.isOccupied = true;// thinks that is occupied is false
 
-
-                    selectedObject.teleportTO(currentBox.xPos, currentBox.yPos);
-                    currentBox.isOccupied = true;
-                    selectedObject.isEquipped = true;
+                    selectedObject.isEquipped = true;// Now it says it is occupied
                 }
-                if (selectedObject.isEquipped) {
-                    System.out.println("if i were smart i would be in a backpack");
-                }
-                if (!objectClicked)
-                    ;
-                //player.teleportTO(clickX, clickY);
-
-
             }
+
+
+        if (selectedObject != null && selectedObject.isEquipped) // if selected object is equipped we want to unequip it.
+            for (int i = 0; i < equipmentBoxes.size(); i++) {//unequip  put in inventory
+                ObjectBox currentBox = equipmentBoxes.elementAt(i);
+                if (!currentBox.isOccupied)
+                    if(currentBox.equipmentSlot == Equipment.EquipmentSlot.BACKPACK) {
+                        selectedObject.teleportTo(currentBox.xPos, currentBox.yPos);// say no longer equiped//no  longer occupied//tell boxe that went to occupied//
+                        selectedObject.equipmentSlot = Equipment.EquipmentSlot.BACKPACK;//told it is in a backpack
+                        selectedObject.isEquipped =false ;// telling backpack box it is full
+                        currentBox.isOccupied = true;//also telling the box that it is full
+                        i = equipmentBoxes.size();//WE STOPPED HERE BECAUSE IT IS LOOPING THROUGH EVERYTHING
+                    }
+
+
+                }
+            }
+    private void handleClick(float clickX,float clickY) {
+        //loop through all object Boxes\
+        ObjectBox lastClickedBox = null;
+        ObjectBox emptyBackpackBox = null;
+        for (int i = 0; i < equipmentBoxes.size(); i++) {//unequip  put in inventory
+            ObjectBox currentBox = equipmentBoxes.elementAt(i);
+
+            if (currentBox.isClicked(clickX, clickY)) {
+                lastClickedBox = currentBox;
+            }
+            if (currentBox.equipmentSlot == Equipment.EquipmentSlot.BACKPACK && !currentBox.isOccupied) {
+                //empty backpack slot would = false
+                currentBox = emptyBackpackBox;
+            }
+        }
+        //check if clicked
+
+
+        //if clicked check if backpack or equipBox
+        if (lastClickedBox !=null)
+            if (lastClickedBox.equipmentSlot == Equipment.EquipmentSlot.BACKPACK) {
+                handleBackpackClick(lastClickedBox); //IF BACKPACK handle items
+            } else {   //IF equipBox unequip
+                if(emptyBackpackBox!=null){
+                    ;
+                }
+            }
+
+
+
+        }
+
+
+
+                // create function swapItems
+
+                // create function unequip
+
+
+
+    private void handleBackpackClick2(ObjectBox backPackSlot) {
+        //swap (H1,B)
+        //{
+        //1) find appropriate destination for H1
+        //does backpack slot have held equipment and does the destination box hold equipment
+        if (backPackSlot.heldEquipment == null){
+            Equipment newlyEquipped = backPackSlot.heldEquipment;
+            ObjectBox destinationBox = null;
+            for (int i = 0; i < equipmentBoxes.size(); i++) {//unequip  put in inventory
+                ObjectBox currentBox = equipmentBoxes.elementAt(i);
+
+                if (currentBox.equipmentSlot == newlyEquipped.equipmentSlot){
+                    destinationBox = currentBox;
+                }
+                //send newly equipped to destination box
+                newlyEquipped.teleportTo(destinationBox);
+                //tell newly equipped that it is equipped
+                newlyEquipped.isEquipped = true;
+                //tell destinationbox that it is occupied
+                destinationBox.isOccupied = true;
+
+
+                //send olditem to backpack
+                destinationBox.heldEquipment.teleportTo(backPackSlot);
+                //tell olditem that is is not equipped
+                destinationBox.heldEquipment.isEquipped = false;
+                //tell backpack it is occupied
+                backPackSlot.isOccupied = true;
+
+                Equipment oldEquipment = destinationBox.heldEquipment;
+                if(oldEquipment == null) {
+
+
+                    destinationBox.heldEquipment.teleportTo(backPackSlot);//THIS IS WHERE WE ARE STOPPED
+                    // this is taking the current equipment in the equipment slot and it is sending it to the backpack
+                    destinationBox.heldEquipment.isEquipped = false;
+                    //
+                    backPackSlot.isOccupied = true;
+
+                }
+
+                //MAKE MOVE TO THAT WILL REPLACE TELEPORTO
+
+
+                }
+            //2) Move H1 to D
+            newlyEquipped.teleportTo(destinationBox);
+        newlyEquipped.isEquipped = true;
+        }
+        //3) Take H2 for D and put in backpack
     }
+    private void handleBackpackClick(ObjectBox backPackSlot) {
+        //make sure backpack has an item in it
+        Equipment backPackEquipment = backPackSlot.heldEquipment;
+        //find destination box
+        ObjectBox destinationBox = null;
+        if (backPackEquipment != null) {
+            for (int i = 0; i < equipmentBoxes.size(); i++){
+                if (equipmentBoxes.elementAt(i).equipmentSlot == backPackEquipment.equipmentSlot){
+                    destinationBox = equipmentBoxes.elementAt(i);
+                }
+            }
+            //equip backpack item to destination
+            //backPackEquipment.equip(destinationBox,backPackSlot);
+            //equip destination item to backpack
+            //destinationBox.heldEquipment.equip(backPackSlot,destinationBox);
+        }
+    }
+
+    public void notOccupied(){
+
+        //if the equipment box does not have a picture it is  unoccupied
+        //if the inventory box has a picture that means it is occupied
+        // if the picture is selected while in the backpack the backpack box is no longer occupied and the object should move to the equipment slot
+        // if the equipment slot item is selected the equipment box is no longer occupied
+    }
+
     public boolean onTouchEvent(MotionEvent event) {
         int eventaction = event.getAction();
 
@@ -169,10 +289,10 @@ public class DrawableObjectView extends View {
 
 
     private void createAllEquipment(){
-       createEquipment(Equipment.EquipmentSlot.BODY, Armor.ArmorType.BODY, Armor.MaterialType.IRON);
+   /*    createEquipment(Equipment.EquipmentSlot.BODY, Armor.ArmorType.BODY, Armor.MaterialType.IRON);
        createEquipment(Equipment.EquipmentSlot.HEAD, Armor.ArmorType.HEAD, Armor.MaterialType.IRON);
        createEquipment(Equipment.EquipmentSlot.LEGS, Armor.ArmorType.LEGS, Armor.MaterialType.IRON);
-
+*/
 
     }
 
@@ -182,8 +302,15 @@ public class DrawableObjectView extends View {
 
 
 
-    private void createEquipment(Equipment.EquipmentSlot equipmentSlot,Armor.ArmorType armorType,Armor.MaterialType materialType){
+    private void createArmor(Equipment.EquipmentSlot equipmentSlot,Armor.ArmorType armorType,Armor.MaterialType materialType){
         Armor armor = new Armor(axeBitmap,400,300,100,100, armorType,materialType,equipmentSlot);
+        ObjectBox destinationBox = null;
+        for(int i = 0; i < equipmentBoxes.size(); i++){
+            if (equipmentBoxes.elementAt(i).equipmentSlot == armor.equipmentSlot){
+                destinationBox = equipmentBoxes.elementAt(i);
+            }
+        }
+        //armor.equip(destinationBox,null);
         sendBitmapToEquipment(armor);
 
 

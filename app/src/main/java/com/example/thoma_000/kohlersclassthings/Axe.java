@@ -13,7 +13,7 @@ public class Axe extends DrawableObject{
     }
     @Override
     public void processClick(){
-        teleportTO(player.xPos,player.yPos);
+        teleportTo(player.xPos,player.yPos);
         System.out.println("i am a Axe");
 
     }
