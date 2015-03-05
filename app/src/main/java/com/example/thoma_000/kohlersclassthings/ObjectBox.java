@@ -36,7 +36,7 @@ public class ObjectBox extends DrawableObject{
 
         isOccupied = false;
 
-      // isSelected.equipment.moveTo ObjectBox && Equipment.EquipmentSlot if(objectbox.!isOccupied);
+      // isSelected.equipment.moveTo ObjectBox && Equipment.EquipmentSlot if(objectbox.!isOccupied...);
     }
     public void equipItem(Equipment item){
         if(item != null) {
