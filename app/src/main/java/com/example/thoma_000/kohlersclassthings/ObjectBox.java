@@ -14,7 +14,7 @@ public class ObjectBox extends DrawableObject{
         super(bitmap, xPos, yPos, width, height);
         this.equipmentSlot = equipmentSlot;}
 
-    public void moveTo (ObjectBox other){
+    public void moveItemTo (ObjectBox other){
         //move selected equipment to the other box/destination
         isOccupied = false;
         other.isOccupied = true;
@@ -52,8 +52,11 @@ public class ObjectBox extends DrawableObject{
 
     @Override
     public void processClick(){
-
-      //  System.out.println("i am da internet");
+      String equipment;
+        if (heldEquipment != null)
+            equipment = heldEquipment.bitmapEquipment + " ";
+        else equipment = "nothing";
+      System.out.println("Equipment Slot:" + equipmentSlot + " " + equipment + ". Is occupied =  " + isOccupied );
 
     }
 

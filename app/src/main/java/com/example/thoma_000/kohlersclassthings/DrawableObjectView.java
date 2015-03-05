@@ -56,48 +56,7 @@ public class DrawableObjectView extends View {
 
 
     }
-    private void handleClick2(float clickX,float clickY) {
-        boolean objectClicked = false;
-        for (int i = 0; i < equipment.size(); i++) {//assigns selected object
 
-            {
-                if (equipment.elementAt(i).isClicked(clickX, clickY)) {
-                    equipment.elementAt(i).processClick();
-                    objectClicked = true;
-                    if (equipment.elementAt(i).isSelected)
-                        selectedObject = equipment.elementAt(i);
-                    else
-                        selectedObject = null;
-                }
-            }
-        }
-        if (selectedObject != null && !selectedObject.isEquipped)// WE SHOULD N OT BE USING ALL THIS CRAZY WEIRD STUFF AND USE WHAT IS IN DRAWABLE OBJECT
-            for (int i = 0; i < equipmentBoxes.size(); i++) {
-                ObjectBox currentBox = equipmentBoxes.elementAt(i);
-                if (selectedObject.equipmentSlot == currentBox.equipmentSlot && !currentBox.isOccupied) {
-                    selectedObject.teleportTo(currentBox.xPos, currentBox.yPos);
-                    currentBox.isOccupied = true;// thinks that is occupied is false
-
-                    selectedObject.isEquipped = true;// Now it says it is occupied
-                }
-            }
-
-
-        if (selectedObject != null && selectedObject.isEquipped) // if selected object is equipped we want to unequip it.
-            for (int i = 0; i < equipmentBoxes.size(); i++) {//unequip  put in inventory
-                ObjectBox currentBox = equipmentBoxes.elementAt(i);
-                if (!currentBox.isOccupied)
-                    if(currentBox.equipmentSlot == Equipment.EquipmentSlot.BACKPACK) {
-                        selectedObject.teleportTo(currentBox.xPos, currentBox.yPos);// say no longer equiped//no  longer occupied//tell boxe that went to occupied//
-                        selectedObject.equipmentSlot = Equipment.EquipmentSlot.BACKPACK;//told it is in a backpack
-                        selectedObject.isEquipped =false ;// telling backpack box it is full
-                        currentBox.isOccupied = true;//also telling the box that it is full
-                        i = equipmentBoxes.size();//WE STOPPED HERE BECAUSE IT IS LOOPING THROUGH EVERYTHING
-                    }
-
-
-                }
-            }
     private void handleClick(float clickX,float clickY) {
         //loop through all object Boxes\
         ObjectBox lastClickedBox = null;

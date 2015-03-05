@@ -36,16 +36,18 @@ public class ItemGrouping {
         if(swappedEquipment!=null)
             givingBox.equipItem(swappedEquipment);
         else
+        {
             givingBox.isOccupied = false;
+            givingBox.heldEquipment = null;
+        }
         //
     }
     public void processClick(float clickX, float clickY){
         ObjectBox clickedBox = returnClickedBox(clickX,clickY);
         if(clickedBox !=null) {
-            System.out.println("box clicked's equipment");
             if (clickedBox.heldEquipment != null) {
                 other.takeItemFromBox(clickedBox);
-                System.out.println("equipment clicked = " + clickedBox.heldEquipment.equipmentSlot);
+                System.out.println("asking other to take box");
             }
         }
     }
@@ -64,6 +66,7 @@ public class ItemGrouping {
         for (int i = 0; i < boxes.size(); i++){
             if(boxes.elementAt(i).isClicked(clickX,clickY)){
                 ret = boxes.elementAt(i);
+                ret.processClick();
             }
         }
         return ret;
@@ -72,7 +75,6 @@ public class ItemGrouping {
         for(int i = 0; i < boxes.size(); i++){
             boxes.elementAt(i).drawSelf(canvas);
             if(boxes.elementAt(i).heldEquipment!=null) {
-
                 boxes.elementAt(i).heldEquipment.drawSelf(canvas);
             }
         }

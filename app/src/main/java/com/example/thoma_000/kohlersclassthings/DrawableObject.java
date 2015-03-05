@@ -14,19 +14,13 @@ public class DrawableObject {
     float height;
     Bitmap bitmap;
     RectF bounds;
-    boolean isSelected;
+  //  boolean isSelected;
 
 
     public boolean isClicked(float clickX, float clickY) {
         boolean ret = false;
         if (bounds.contains(clickX, clickY)) {
             ret = true;
-            if (isSelected) isSelected= false;
-            else
-            isSelected = true;
-            if (isSelected) System.out.println("is selected");
-            else
-            System.out.println("is not selected");
         }
         return ret;
     }
@@ -81,6 +75,7 @@ public void teleportTo(float destinationX,float destinationY){
 
 public void teleportTo(ObjectBox box){
     teleportTo(box.xPos,box.yPos);
+    bounds = box.bounds;
 
 
 
@@ -92,8 +87,8 @@ public void update(Canvas canvas){
 
 
 public void drawSelf (Canvas canvas){
+    //setBounds();
     canvas.drawBitmap(bitmap,null,bounds,null);
-    setBounds();
 
     }
 }
